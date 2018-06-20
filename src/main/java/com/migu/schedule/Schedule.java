@@ -4,6 +4,7 @@ package com.migu.schedule;
 import com.migu.schedule.constants.ReturnCodeKeys;
 import com.migu.schedule.info.TaskInfo;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -93,6 +94,7 @@ public class Schedule {
         {
             return ReturnCodeKeys.E012;
         }
+        waitingList.remove(taskId);
 
         return ReturnCodeKeys.E011;
     }
@@ -114,15 +116,66 @@ public class Schedule {
 
     public int scheduleTask(int threshold) {
 
+        if (threshold<=0)
+        {
+            return ReturnCodeKeys.E002;
+        }
+
         //获取当前任务消耗
 
-        return ReturnCodeKeys.E000;
+        return ReturnCodeKeys.E013;
+    }
+
+
+    private void nodeDiff(int threshold)
+    {
+        List<Integer> list=new ArrayList<>();
+        for (Map.Entry<Integer,HashMap<Integer,Integer>> entry:nodeAndTaskMap.entrySet())
+        {
+            int sum=0;
+            for (Map.Entry<Integer,Integer> task:entry.getValue().entrySet())
+            {
+                sum+=task.getValue();
+            }
+            list.add(sum);
+        }
+        /*for (int i=0;i<list.size();i++)
+        {
+            for (int j=i+1;j<)
+        }*/
+    }
+
+    private void judge()
+    {
+        int consum=0;
+        int taskNum=0;
+        for (Map.Entry<Integer,Integer> entry:waitingList.entrySet())
+        {
+            taskNum++;
+            consum+=entry.getValue();
+        }
+        int avg=consum/taskNum;
+        HashMap<Integer,Integer> task=waitingList;
+        for (Map.Entry<Integer,HashMap<Integer,Integer>> entry:nodeAndTaskMap.entrySet())
+        {
+            for (int i=1;i<=avg;i++)
+            {
+                task.remove(i);
+
+            }
+
+        }
+
     }
 
 
     public int queryTaskStatus(List<TaskInfo> tasks) {
+        if (tasks.isEmpty())
+        {
+            return ReturnCodeKeys.E016;
+        }
 
-        return ReturnCodeKeys.E000;
+        return ReturnCodeKeys.E015;
     }
 
 }
